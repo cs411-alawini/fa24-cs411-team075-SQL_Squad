@@ -4,8 +4,8 @@
 
 |   Info      |        Description     |
 | ----------- | ---------------------- |
-| TeamID      |        Team-000        |
-| TeamName    |         sample         |
+| TeamID      |        Team-075        |
+| TeamName    |         SQL_Squad      |
 | Captain     |       Keisha Kaba      |
 | Captain     |   kkaba2@illinois.edu  |
 | Member1     |   Abbas Ali Mirza      |
