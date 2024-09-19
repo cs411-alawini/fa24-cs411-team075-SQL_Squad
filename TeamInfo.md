@@ -19,10 +19,11 @@
 
 |   Info      |        Description     |
 | ----------- | ---------------------- |
-|  Title      |       ProjectTitle     |
+|  Title      |      HealthConnect     |
 | System URL  |      link_to_system    |
 | Video Link  |      link_to_video     |
 
 ## Project Summary
 
-This is a summary of the project!
+HealthConnect is an innovative application that combines a medical record management system with essential health and fitness features. The app enables healthcare providers to input and access patient medical histories, symptoms, and diagnoses while empowering patients to monitor their health through personalized fitness and wellness tools. By integrating medical record management with health tracking capabilities, HealthConnect enhances communication between doctors and patients, fostering a holistic approach to health management.
+
