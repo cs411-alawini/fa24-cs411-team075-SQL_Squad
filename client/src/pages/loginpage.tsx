@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { loginUser, signupUser } from '../services/services';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; 
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isNewUser, setIsNewUser] = useState(false);
   const [error, setError] = useState('');
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +30,7 @@ const LoginPage: React.FC = () => {
 
       console.log('Response:', response.data);
       // handle successful login/signup here (like store user data, redirect)
+      navigate('/dashboard');  // Redirect to the '/dashboard' route (or whichever route you want)
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         setError(error.response.data.error || 'An error occurred');
