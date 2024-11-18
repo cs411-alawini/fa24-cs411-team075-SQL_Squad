@@ -9,6 +9,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated }) => {
   return (
     <nav className="bg-gray-800 p-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
+        {/* Application name/logo */}
         <Link to="/" className="text-white text-2xl font-semibold">HealthConnect</Link>
 
         <div className="space-x-4">
