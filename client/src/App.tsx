@@ -11,9 +11,9 @@ const App: React.FC = () => {
   const mockUser = { role: "patient" }; // Replace with real user data fetched from backend
 
   return (
-    <Router>
+    <Router basename={process.env.REACT_APP_BASE_URL || "/"}>
       <Navbar isAuthenticated={isAuthenticated} />
-
+      
       <Routes>
         {/* Public routes */}
         <Route path="/login" element={<LoginPage />} />

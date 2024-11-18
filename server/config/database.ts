@@ -1,29 +1,31 @@
-import { User, Patient, Doctor } from "../models/user";
-import { userData, patientData, doctorData } from "../../data/mockData";
+// import { User, Patient, Doctor } from "../models/user";
+// import { userData, patientData, doctorData } from "../../data/mockData";
 
-function generateUserID() {
-    return Math.max(...userData.map(user => user.userID)) + 1;
-}
+import pool from "../config/connection";
+
+// function generateUserID() {
+//     return Math.max(...userData.map(user => user.userID)) + 1;
+// }
 
 export async function signUp(username: string, password: string, role: number) {
     if (!username || !password || role === undefined) {
         throw new Error("All fields are required (username, password, role).");
     }
 
-    const existingUser = userData.find(user => user.username === username);
-    if (existingUser) {
+    const [existingUser]: any = await pool.query(
+        `SELECT * FROM users WHERE username = '${username}'`,
+    );
+    
+    if ((existingUser as any[]).length > 0) {
         throw new Error("Username is already taken.");
     }
+    
+    const [result]: any = await pool.query(
+        `INSERT INTO users (username, password, role) VALUES ('${username}', '${password}', '${role}')`,
+    );
+    
+    return { userID: result.insertId, username, role };
 
-    const newUser = {
-        userID: generateUserID(),
-        username,
-        password,
-        role, // 0 for Doctor, 1 for Patient
-    };
-
-    userData.push(newUser);
-    return newUser;
 }
 
 export async function login(username: string, password: string) {
@@ -31,45 +33,48 @@ export async function login(username: string, password: string) {
       throw new Error("Both username and password are required.");
     }
   
-    const user = userData.find(u => u.username === username && u.password === password);
-    if (!user) {
-      throw new Error("Invalid username or password.");
-    }
+    const [users]: any = await pool.query(
+        `SELECT userID, username, role FROM users WHERE username = '${username}' AND password = '${password}'`
+        );
 
-    return { userID: user.userID, username: user.username, role: user.role };
+        if (users.length === 0) {
+        throw new Error("Invalid username or password.");
+        }
+
+        return users[0];
 }
 
-export async function deleteUser(userID: number): Promise<void> {
-    // Validate input
-    if (!userID) {
-        throw new Error("A valid userID is required.");
+export async function deleteUser(userID: number) {
+    const [result]: any = await pool.query(
+    `DELETE FROM users WHERE userID = ${userID}`
+    );
+
+    if (result.affectedRows === 0) {
+    throw new Error(`User with ID ${userID} not found.`);
     }
-  
-    // Find the user
-    const userIndex = userData.findIndex(user => user.userID === userID);
-    if (userIndex === -1) {
+
+    return `User with ID ${userID} deleted successfully.`;
+}
+
+export async function getAllUsers() {
+    const [users]: any = await pool.query("SELECT userID, username, role FROM users");
+    return users;
+}
+
+export async function updateUserPassword(userID: number, newPassword: string) {
+    const [result]: any = await pool.query(
+        `UPDATE users SET password = '${newPassword}' WHERE userID = ${userID}`
+    );
+
+    if (result.affectedRows === 0) {
         throw new Error(`User with ID ${userID} not found.`);
     }
-  
-    // Check user role and delete from related tables
-    const user = userData[userIndex];
-    if (user.role === 0) {
-        const doctorIndex = doctorData.findIndex(doc => doc.docID === userID);
-        if (doctorIndex !== -1) {
-            doctorData.splice(doctorIndex, 1);
-        }
-    } else if (user.role === 1) {
-        const patientIndex = patientData.findIndex(patient => patient.patientID === userID);
-        if (patientIndex !== -1) {
-            patientData.splice(patientIndex, 1);
-        }
-    }
-  
-    // remove user from userData
-    userData.splice(userIndex, 1);
-  
-    console.log(`User with ID ${userID} deleted successfully.`);
+
+    return `Password for User with ID ${userID} updated successfully.`;
 }
+    
+export default { signUp, login, deleteUser, getAllUsers, updateUserPassword };
+
 
 
 
