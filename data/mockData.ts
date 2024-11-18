@@ -1,5 +1,5 @@
 export const userData = [
-    { userID: 1, username: "docJohn", password: "pass123", role: 0 },
+    { userID: 1, username: "docJohn@gmail.com", password: "pass123", role: 0 },
     { userID: 2, username: "docEmily", password: "emily456", role: 0 },
     { userID: 3, username: "patAlex", password: "alex789", role: 1 },
     { userID: 4, username: "patMaria", password: "maria101", role: 1 },
