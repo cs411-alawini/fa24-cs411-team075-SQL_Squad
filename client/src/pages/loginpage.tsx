@@ -1,14 +1,41 @@
 import React, { useState } from 'react';
+import { loginUser, signupUser } from '../services/services';
+import axios from 'axios';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isNewUser, setIsNewUser] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Handle login or new user registration logic here
-    console.log('Email:', email, 'Password:', password);
+  //   console.log('Email:', email, 'Password:', password);
+  //   console.log("Akriti");
+  // };
+    // Handle login or new user registration logic here
+    console.log('Submitted');
+    setError('');
+    try {
+      const endpoint = isNewUser ? '/api/signup' : '/api/login';
+      const response = await axios.post(`http://localhost:3007${endpoint}`, {
+        username: email, // Your server expects 'username', not 'email'
+        password: password,
+        role: 1 // Assuming 1 is for patients. Adjust as needed.
+      });
+
+      console.log('Response:', response.data);
+      // handle successful login/signup here (like store user data, redirect)
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        setError(error.response.data.error || 'An error occurred');
+      } else {
+        setError('An unexpected error occurred');
+      }
+    }
+
+    console.log('Email:', email, 'Password:', password);
   };
 
   return (

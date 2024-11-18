@@ -1,5 +1,5 @@
 import React from "react";
-import HealthImage from "/Users/razalimirza/Desktop/fa24-cs411-team075-SQL_Squad/client/src/assets/healthcare-image1.jpg";
+import HealthImage from "../assets/healthcare-image1.jpg";
 
 const Homepage: React.FC = () => {
   return (
