@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { loginUser, signupUser } from '../services/services';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isNewUser, setIsNewUser] = useState(false);
   const [error, setError] = useState('');
@@ -13,33 +12,26 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login or new user registration logic here
-  //   console.log('Email:', email, 'Password:', password);
-  //   console.log("Akriti");
-  // };
-    // Handle login or new user registration logic here
-    console.log('Submitted');
-    setError('');
-    try {
-      const endpoint = isNewUser ? '/api/signup' : '/api/login';
-      const response = await axios.post(`http://localhost:3007${endpoint}`, {
-        username: email, // Your server expects 'username', not 'email'
-        password: password,
-        role: 1 // Assuming 1 is for patients. Adjust as needed.
-      });
+    setError('');
+    
+    try {
+      const endpoint = isNewUser ? '/api/signup' : '/api/login';
+      const response = await axios.post(`http://localhost:3007${endpoint}`, {
+        username: username,
+        password: password,
+        role: 1  // Assuming 1 is for patients. Adjust as needed.
+      });
 
-      console.log('Response:', response.data);
-      // handle successful login/signup here (like store user data, redirect)
+      console.log('Response:', response.data);
+      // handle successful login/signup here (like store user data, redirect)
       navigate('/dashboard');  // Redirect to the '/dashboard' route (or whichever route you want)
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error.response.data.error || 'An error occurred');
-      } else {
-        setError('An unexpected error occurred');
-      }
-    }
-
-    console.log('Email:', email, 'Password:', password);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        setError(error.response.data.error || 'An error occurred');
+      } else {
+        setError('An unexpected error occurred');
+      }
+    }
   };
 
   return (
@@ -48,13 +40,13 @@ const LoginPage: React.FC = () => {
         <h2 className="text-2xl font-semibold text-center text-gray-700 mb-6">Welcome to HealthConnect</h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-600 mb-1">Email Address</label>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-600 mb-1">Username</label>
             <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter your username"
               required
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -92,6 +84,11 @@ const LoginPage: React.FC = () => {
             <button className="text-blue-500 font-semibold hover:underline">Forgot Password?</button>
           </p>
         </div>
+        {error && (
+          <div className="mt-4 text-red-500 text-center">
+            {error}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,24 +1,23 @@
 // server/routes/auth.ts
 import { Router, Request, Response } from 'express';
-import { signUp, login, deleteUser } from '../config/database';
+import { signUp, login, deleteUser } from '../services/database';
 import { User, Patient, Doctor } from "../models/user";
 
 const router = Router();
 
 router.post('/signup', async (req: Request, res: Response) => {
-    // Registration logic
     const { username, password, role } = req.body;
-    // if (!username || !password || typeof role !== 'number') {
-    //     return res.status(400).json({ error: 'Invalid input. Please provide username, password, and role.' });
-    // }
 
     try {
-        const newUser = await signUp(username, password, role);
+        const newUser = await signUp(username, password, role || 1);
         res.status(201).json({ message: 'User signed up successfully!', user: newUser });
     } catch (error) {
+        console.error("Error during sign-up:", error);
         res.status(500).json({ error: error instanceof Error ? error.message : 'An unknown error occurred.' });
     }
 });
+
+
 
 router.post('/login', async (req: Request, res: Response) => {
     // Login logic
