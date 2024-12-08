@@ -36,7 +36,7 @@ export async function login(username: string, password: string) {
     
   
     const [users]: any = await pool.query(
-        `SELECT userID, userName, role FROM users WHERE userName = '${username}' AND password = '${password}'`
+        `SELECT userID, userName, role FROM User WHERE userName = '${username}' AND password = '${password}'`
         );
 
         if (users.length === 0) {
@@ -83,3 +83,5 @@ export async function updateUser(userID: number, updates: { username?: string; p
     const [updatedUser]: any = await pool.query(`SELECT userID, username, role FROM users WHERE userID = ${userID}`);
     return updatedUser[0];
 }
+
+
