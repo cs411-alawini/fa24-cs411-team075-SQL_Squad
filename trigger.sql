@@ -1,3 +1,4 @@
+--This file contains the trigger we implemented on GCP --> Added here for reference
 DELIMITER $$
 
 CREATE TRIGGER notifyDoctorOnCriticalFitness
