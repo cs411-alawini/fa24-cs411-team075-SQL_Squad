@@ -48,7 +48,7 @@ export async function login(username: string, password: string) {
 
 export async function deleteUser(userID: number) {
     const [result]: any = await pool.query(
-    `DELETE FROM users WHERE userID = ${userID}`
+    `DELETE FROM User WHERE userID = ${userID}`
     );
 
     if (result.affectedRows === 0) {
