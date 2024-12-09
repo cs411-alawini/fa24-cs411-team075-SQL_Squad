@@ -50,9 +50,10 @@ router.delete('/delete', async (req: Request, res: Response): Promise<void> => {
 });
 
 // Update Profile Route
-router.put('/update-profile/:userID', async (req: Request, res: Response) => {
-    const userID = parseInt(req.params.userID);
-    const { username, password, role } = req.body;
+router.put('/update', async (req: Request, res: Response) => {
+    // const userID = parseInt(req.body.userID);
+    const { userID, username, password, role } = req.body;
+    console.log("router.put:", userID, username, password, role);
 
     try {
         const updatedUser = await updateUser(userID, { username, password, role });
