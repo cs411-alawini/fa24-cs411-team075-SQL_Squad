@@ -31,8 +31,15 @@ router.post('/login', async (req: Request, res: Response) => {
 });
 
 // Delete User Route
-router.delete('/delete/:userID', async (req: Request, res: Response) => {
-    const userID = parseInt(req.params.userID);
+router.delete('/delete', async (req: Request, res: Response): Promise<void> => {
+    let { userID } = req.body; 
+    console.log("router.delete userId:", userID);
+    userID = parseInt(userID, 10);
+
+    if (isNaN(userID)) {
+        res.status(400).json({ error: 'Invalid userID. It must be a number.' });
+    }
+
 
     try {
         await deleteUser(userID);
@@ -43,9 +50,10 @@ router.delete('/delete/:userID', async (req: Request, res: Response) => {
 });
 
 // Update Profile Route
-router.put('/update-profile/:userID', async (req: Request, res: Response) => {
-    const userID = parseInt(req.params.userID);
-    const { username, password, role } = req.body;
+router.put('/update', async (req: Request, res: Response) => {
+    // const userID = parseInt(req.body.userID);
+    const { userID, username, password, role } = req.body;
+    console.log("router.put:", userID, username, password, role);
 
     try {
         const updatedUser = await updateUser(userID, { username, password, role });

@@ -31,9 +31,9 @@ export const loginUser = async (username: string, password: string): Promise<any
     }
   };
   
-  export const deleteUser = async (userID: number): Promise<any> => {
+  export const deleteUser = async (): Promise<any> => {
     try {
-      const response = await httpClient.delete(`/api/delete/${userID}`);
+      const response = await httpClient.delete(`/api/delete`);
       return response.data;
     } catch (error) {
       throw error;

@@ -11,19 +11,34 @@ const Profile: React.FC = () => {
   const navigate = useNavigate();
 
   // Mock function to simulate account deletion
-  const handleDeleteAccount = () => {
-    setIsDeleted(true);
-    alert('Your account has been deleted.');
-    navigate('/login'); // Redirect to login after account deletion
+  const handleDeleteAccount = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const userID = localStorage.getItem('userID'); 
+    console.log("handleDelete userID", userID);
+    try {
+      const response = await axios.delete('http://localhost:3007/api/delete', {
+            data: { userID }, // Send userID in the request body
+      });
+      if (response.status === 200) {
+        alert('Your account has been deleted.');
+        setIsDeleted(true); // Indicate deletion state
+        navigate('/login'); // Redirect to login after account deletion
+      }
+    } catch (error: any) {
+        setMessage(`Error: ${error.response?.data?.error || error.message}`);
+    }
   };
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const userID = localStorage.getItem('userID'); 
     
     try {
-      const response = await axios.put('http://localhost:3007/api/users/update', {
+      const response = await axios.put('http://localhost:3007/api/update', {
+        userID,
         username,
-        email
+        email,
       });
       setMessage('Profile updated successfully!');
       setIsEditing(false); // Close the editing form after successful update
