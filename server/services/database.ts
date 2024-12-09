@@ -1,4 +1,3 @@
-
 import pool from './connection';
 
 
@@ -48,7 +47,7 @@ export async function login(username: string, password: string) {
 
 export async function deleteUser(userID: number) {
     const [result]: any = await pool.query(
-    `DELETE FROM users WHERE userID = ${userID}`
+    `DELETE FROM User WHERE userID = ${userID}`
     );
 
     if (result.affectedRows === 0) {
@@ -73,15 +72,25 @@ export async function updateUser(userID: number, updates: { username?: string; p
         throw new Error("No fields provided to update.");
     }
 
-    const query = `UPDATE users SET ${fieldsToUpdate.join(', ')} WHERE userID = ${userID}`;
+    const query = `UPDATE User SET ${fieldsToUpdate.join(', ')} WHERE userID = ${userID}`;
     const [result]: any = await pool.query(query);
 
     if (result.affectedRows === 0) {
         throw new Error(`User with ID ${userID} not found.`);
     }
 
-    const [updatedUser]: any = await pool.query(`SELECT userID, username, role FROM users WHERE userID = ${userID}`);
+    const [updatedUser]: any = await pool.query(`SELECT userID, username, role FROM User WHERE userID = ${userID}`);
     return updatedUser[0];
 }
 
+
+export async function searchDoctors(keyword?: string) {
+    const [doctors] = await pool.query(
+        'SELECT docID, docName, specialization FROM Doctor WHERE specialization LIKE ? OR docName LIKE ?',
+        [`%${keyword}%`, `%${keyword}%`]
+    );
+    
+    // return empty array if no doctors found
+    return doctors;
+}
 

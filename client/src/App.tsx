@@ -8,7 +8,7 @@ import Profile from './pages/Profile';
 
 const App: React.FC = () => {
   const isAuthenticated = true; // Replace with actual authentication logic once ready
-  const mockUser = { role: "patient" }; // Replace with real user data fetched from backend
+  // const mockUser = { role: "patient" }; // Replace with real user data fetched from backend
 
   return (
     <Router>
