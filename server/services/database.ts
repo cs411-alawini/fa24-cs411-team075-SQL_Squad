@@ -1,4 +1,3 @@
-
 import pool from './connection';
 
 
@@ -84,4 +83,14 @@ export async function updateUser(userID: number, updates: { username?: string; p
     return updatedUser[0];
 }
 
+
+export async function searchDoctors(keyword?: string) {
+    const [doctors] = await pool.query(
+        'SELECT docID, docName, specialization FROM Doctor WHERE specialization LIKE ? OR docName LIKE ?',
+        [`%${keyword}%`, `%${keyword}%`]
+    );
+    
+    // return empty array if no doctors found
+    return doctors;
+}
 

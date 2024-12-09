@@ -1,5 +1,6 @@
 import React from "react";
 import HealthImage from "../assets/healthcare-image1.jpg";
+import DoctorKeywordSearch from './search';
 
 const Homepage: React.FC = () => {
   return (
@@ -55,6 +56,17 @@ const Homepage: React.FC = () => {
           >
             Learn More
           </a>
+        </div>
+      </section>
+      
+      {/* Doctor Search Section */}
+      <section className="bg-white py-12 px-4 md:px-16">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-3xl font-semibold mb-6">Find Your Perfect Healthcare Provider</h2>
+          <p className="text-gray-600 mb-8">
+            Search for doctors by name, specialization, or medical expertise
+          </p>
+          <DoctorKeywordSearch />
         </div>
       </section>
 

@@ -15,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api', authRoutes);
+// app.use('/api/doctors', doctorRoutes);
 
 app.get('/api/', (req:Request, res:Response) => {
     res.send('api');

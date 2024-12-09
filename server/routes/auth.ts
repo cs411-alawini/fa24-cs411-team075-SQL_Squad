@@ -1,5 +1,5 @@
-import { Router, Request, Response } from 'express';
-import { signUp, login, deleteUser, updateUser } from '../services/database';
+import { Router, Request, Response, NextFunction } from 'express';
+import { signUp, login, deleteUser, updateUser, searchDoctors } from '../services/database';
 
 const router = Router();
 
@@ -61,6 +61,29 @@ router.put('/update', async (req: Request, res: Response) => {
     } catch (error) {
         console.error("Error during profile update:", error);
         res.status(500).json({ error: error instanceof Error ? error.message : 'An unknown error occurred.' });
+    }
+});
+
+router.get('/doctors', async (req: Request<{}, any, any, { keyword?: string }>, res: Response, next: NextFunction) => {
+    const { keyword } = req.query;
+
+    try {
+        const searchKeyword = keyword ? String(keyword).trim() : '';
+        const doctors = await searchDoctors(searchKeyword);
+        
+        // if (doctors.length === 0) {
+        //     res.status(404).json({ 
+        //         message: 'No doctors found matching the search criteria.' 
+        //     });
+        //     return;
+        // }
+        
+        res.status(200).json({
+            message: 'Doctors retrieved successfully',
+            doctors
+        });
+    } catch (error) {
+        next(error);
     }
 });
 
