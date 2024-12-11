@@ -8,7 +8,7 @@ router.post('/signup', async (req: Request, res: Response) => {
     const { username, password} = req.body;
 
     try {
-        const newUser = await signUp(username, password|| 1);
+        const newUser = await signUp(username, password, 1);
         res.status(201).json({ message: 'User signed up successfully!', user: newUser });
     } catch (error) {
         console.error("Error during sign-up:", error);

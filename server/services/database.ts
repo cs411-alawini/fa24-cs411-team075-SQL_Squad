@@ -6,7 +6,7 @@ import pool from './connection';
 //     return Math.max(...userData.map(user => user.userID)) + 1;
 // }
 
-export async function signUp(username: string, password: string) {
+export async function signUp(username: string, password: string, role: number) {
     if (!username || !password) {
         throw new Error("All fields are required (username, password).");
     }
@@ -20,7 +20,7 @@ export async function signUp(username: string, password: string) {
     }
     
     const [result]: any = await pool.query(
-        `INSERT INTO User (username, password) VALUES ('${username}', '${password}')`
+        `INSERT INTO User (username, password, role) VALUES ('${username}', '${password}', '${role}')`
     );
     
     return { userID: result.insertId, username};
@@ -66,7 +66,7 @@ export async function updateUser(userID: number, updates: { username?: string; p
     const fieldsToUpdate = [];
     if (updates.username) fieldsToUpdate.push(`username = '${updates.username}'`);
     if (updates.password) fieldsToUpdate.push(`password = '${updates.password}'`);
-    if (updates.role !== undefined) fieldsToUpdate.push(`role = ${updates.role}`);
+    // if (updates.role !== undefined) fieldsToUpdate.push(`role = ${updates.role}`);
     
     if (fieldsToUpdate.length === 0) {
         throw new Error("No fields provided to update.");

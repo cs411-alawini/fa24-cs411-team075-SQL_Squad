@@ -6,7 +6,7 @@ const Profile: React.FC = () => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
@@ -38,7 +38,7 @@ const Profile: React.FC = () => {
       const response = await axios.put('http://localhost:3007/api/update', {
         userID,
         username,
-        email,
+        password,
       });
       setMessage('Profile updated successfully!');
       setIsEditing(false); // Close the editing form after successful update
@@ -65,7 +65,7 @@ const Profile: React.FC = () => {
             <strong>Username:</strong> {username || 'Not set'}
           </div>
           <div className="mb-4">
-            <strong>Email:</strong> {email || 'Not set'}
+            <strong>Password:</strong> {password || 'Not set'}
           </div>
           <button
             onClick={() => setIsEditing(true)}
@@ -89,12 +89,12 @@ const Profile: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-600">Email</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-600">Password</label>
             <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
               className="w-full p-3 border border-gray-300 rounded-md"
             />
