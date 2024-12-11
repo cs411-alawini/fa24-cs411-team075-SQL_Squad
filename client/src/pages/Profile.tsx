@@ -5,8 +5,12 @@ import axios from 'axios';
 const Profile: React.FC = () => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isFitnessFormVisible, setIsFitnessFormVisible] = useState(false);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [caloriesBurnt, setCaloriesBurnt] = useState('');
+  const [steps, setSteps] = useState('');
+  const [sleepDuration, setSleepDuration] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
@@ -17,23 +21,44 @@ const Profile: React.FC = () => {
     console.log("handleDelete userID", userID);
     try {
       const response = await axios.delete('http://localhost:3007/api/delete', {
-            data: { userID }, // Send userID in the request body
+        data: { userID },
       });
       if (response.status === 200) {
         alert('Your account has been deleted.');
-        setIsDeleted(true); // Indicate deletion state
-        navigate('/login'); // Redirect to login after account deletion
+        setIsDeleted(true);
+        navigate('/login');
       }
     } catch (error: any) {
-        setMessage(`Error: ${error.response?.data?.error || error.message}`);
+      setMessage(`Error: ${error.response?.data?.error || error.message}`);
+    }
+  };
+
+  const handleUpdateFitness = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const userID = localStorage.getItem('userID'); 
+    console.log("Payload:", { userID, caloriesBurnt, steps, sleepDuration });
+    try {
+      const response = await axios.put('http://localhost:3007/api/update-fitness', {
+            patientID: userID, // Match the backend field
+            caloriesBurned: parseFloat(caloriesBurnt), // Convert to number
+            steps: parseInt(steps, 10), // Convert to number
+            sleepDuration: parseFloat(sleepDuration), // Convert to number
+        });
+      if (response.status === 200) {
+        setMessage('Fitness data updated successfully!');
+        setCaloriesBurnt('');
+        setSteps('');
+        setSleepDuration('');
+        setIsFitnessFormVisible(false);
+      }
+    } catch (error: any) {
+      setMessage(`Error: ${error.response?.data?.error || error.message}`);
     }
   };
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const userID = localStorage.getItem('userID'); 
-    
     try {
       const response = await axios.put('http://localhost:3007/api/update', {
         userID,
@@ -41,9 +66,9 @@ const Profile: React.FC = () => {
         email,
       });
       setMessage('Profile updated successfully!');
-      setIsEditing(false); // Close the editing form after successful update
+      setIsEditing(false);
     } catch (error: any) {
-      setMessage(`Error: ${error.response ? error.response.data : error.message}`);
+      setMessage(`Error: ${error.response?.data?.error || error.message}`);
     }
   };
 
@@ -55,8 +80,6 @@ const Profile: React.FC = () => {
     <div className="min-h-screen bg-gray-100 p-6">
       <h1 className="text-3xl font-semibold mb-4">Profile</h1>
       <p className="mb-4">Here, users can view and manage their account information.</p>
-      
-      {/* Show message if profile update or error occurred */}
       {message && <p className="text-red-500">{message}</p>}
 
       {!isEditing ? (
@@ -115,7 +138,61 @@ const Profile: React.FC = () => {
         </form>
       )}
 
-      {/* Delete Account button */}
+      {!isFitnessFormVisible && (
+        <button
+          onClick={() => setIsFitnessFormVisible(true)}
+          className="mt-6 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+        >
+          Add Fitness Data
+        </button>
+      )}
+
+      {isFitnessFormVisible && (
+        <form onSubmit={handleUpdateFitness} className="mt-6 space-y-4">
+          <h2 className="text-xl font-semibold mb-4">Update Fitness Data</h2>
+
+          <div>
+            <label htmlFor="calories" className="block text-sm font-medium text-gray-600">Calories Burnt</label>
+            <input
+              type="number"
+              id="calories"
+              value={caloriesBurnt}
+              onChange={(e) => setCaloriesBurnt(e.target.value)}
+              required
+              className="w-full p-3 border border-gray-300 rounded-md"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="steps" className="block text-sm font-medium text-gray-600">Steps</label>
+            <input
+              type="number"
+              id="steps"
+              value={steps}
+              onChange={(e) => setSteps(e.target.value)}
+              required
+              className="w-full p-3 border border-gray-300 rounded-md"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="sleep" className="block text-sm font-medium text-gray-600">Sleep Duration (hours)</label>
+            <input
+              type="number"
+              id="sleep"
+              value={sleepDuration}
+              onChange={(e) => setSleepDuration(e.target.value)}
+              required
+              className="w-full p-3 border border-gray-300 rounded-md"
+            />
+          </div>
+
+          <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+            Update Fitness Data
+          </button>
+        </form>
+      )}
+
       <div className="mt-6">
         <button
           onClick={handleDeleteAccount}
@@ -129,3 +206,4 @@ const Profile: React.FC = () => {
 };
 
 export default Profile;
+
