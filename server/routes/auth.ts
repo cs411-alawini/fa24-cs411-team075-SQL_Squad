@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { signUp, login, deleteUser, updateUser, searchDoctors, getFitnessData } from '../services/database';
+import pool from '../services/connection';
 
 const router = Router();
 
@@ -111,5 +112,28 @@ router.get('/fitness/:patientID', async (req: Request<{ patientID: number }>, re
         });
     }
  });
+
+router.put('/update-fitness', async (req: Request, res: Response): Promise<void> => {
+    const { patientID, caloriesBurned, steps, sleepDuration } = req.body;
+    console.log('Received payload:', req.body);
+
+    if (!patientID || !caloriesBurned || !steps || !sleepDuration) {
+        res.status(400).json({ error: 'Missing required fields: patientID, caloriesBurned, steps, sleepDuration' });
+        return;
+    }
+
+    try {
+        // Call the stored procedure with the provided parameters
+        await pool.query(
+            `CALL updateFitnessAndNotifyDoctor(?, ?, ?, ?)`,
+            [patientID, caloriesBurned, steps, sleepDuration]
+        );
+
+        res.status(200).json({ message: `Fitness data for patient ID ${patientID} updated successfully.` });
+    } catch (error) {
+        console.error('Error updating fitness data:', error);
+        res.status(500).json({ error: error instanceof Error ? error.message : 'An unknown error occurred.' });
+    }
+});
 
 export default router;

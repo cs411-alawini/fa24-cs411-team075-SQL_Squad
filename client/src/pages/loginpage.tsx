@@ -28,8 +28,8 @@ const LoginPage: React.FC = () => {
       localStorage.setItem('username', user.username);
       localStorage.setItem('password', user.password);
       console.log("handleSubmit userID:", user.userID);
-      console.log("handleSubmit username:", user.username);
-      console.log("handleSubmit password:", user.userID);
+      // console.log("handleSubmit username:", user.username);
+      // console.log("handleSubmit password:", user.userID);
       // handle successful login/signup here (like store user data, redirect)
       navigate('/dashboard');  // Redirect to the '/dashboard' route (or whichever route you want)
     } catch (error) {
