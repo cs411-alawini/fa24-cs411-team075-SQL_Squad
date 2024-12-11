@@ -94,3 +94,13 @@ export async function searchDoctors(keyword?: string) {
     return doctors;
 }
 
+
+
+export async function getFitnessData(patientID: number) {
+    const [fitnessData]: any = await pool.query(
+        'SELECT * FROM Fitness WHERE patientID = ? ORDER BY date DESC LIMIT 30',
+        [patientID]
+    );
+    return fitnessData;
+ }
+ 

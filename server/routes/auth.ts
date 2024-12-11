@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { signUp, login, deleteUser, updateUser, searchDoctors } from '../services/database';
+import { signUp, login, deleteUser, updateUser, searchDoctors, getFitnessData } from '../services/database';
 
 const router = Router();
 
@@ -86,5 +86,30 @@ router.get('/doctors', async (req: Request<{}, any, any, { keyword?: string }>, 
         next(error);
     }
 });
+
+router.get('/fitness/:patientID', async (req: Request<{ patientID: number }>, res: Response): Promise<void> => {
+    // console.log("arrived here");
+    const patientID = req.params.patientID;
+
+
+    if (isNaN(patientID)) {
+        res.status(400).json({ error: 'Invalid patient ID' });
+        return;
+    }
+ 
+ 
+    try {
+        const fitnessData = await getFitnessData(patientID);
+        res.status(200).json({
+            message: 'Fitness data retrieved successfully',
+            fitnessData
+        });
+    } catch (error) {
+        console.error('Error retrieving fitness data:', error);
+        res.status(500).json({
+            error: error instanceof Error ? error.message : 'An unknown error occurred.'
+        });
+    }
+ });
 
 export default router;

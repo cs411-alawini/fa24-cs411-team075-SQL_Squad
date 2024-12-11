@@ -13,6 +13,16 @@ export const httpClient = axios.create({
 });
 
 
+export const getFitnessData = async (patientID: number): Promise<any> => {
+  try {
+    const response = await httpClient.get(`/api/fitness/${patientID}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+ }; 
+
+
 export const loginUser = async (username: string, password: string): Promise<any> => {
     try {
       const response = await httpClient.post('/api/login', { username, password });
